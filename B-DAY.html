@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Straw Hat Birthday!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Inter:wght@400;500&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #ff7597; /* Soft Anime Pink */
+            --secondary-color: #ffd3df;
+            --text-main: #2b1b20;
+            --overlay-bg: rgba(255, 255, 255, 0.85);
+            /* New: for envelope texture */
+            --paper-color: #fdfdfd;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            /* Full-screen Pink One Piece Background */
+            background-image: linear-gradient(rgba(255, 240, 245, 0.6), rgba(255, 240, 245, 0.6)), 
+                              url('https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=1920'); /* Main page background image URL */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* --- LANDING SCREEN --- */
+        #landing-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 30px;
+            position: absolute;
+            width: 90%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(255, 117, 151, 0.2);
+            border: 2px solid var(--secondary-color);
+            z-index: 10;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        #landing-screen h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        /* Music Button Styling */
+        .music-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 117, 151, 0.4);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(255, 117, 151, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 4px 25px rgba(255, 117, 151, 0.7); }
+            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(255, 117, 151, 0.4); }
+        }
+
+        /* Secret Form (Hidden until music plays) */
+        #name-form-container {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            margin-top: 15px;
+        }
+
+        input[type="text"] {
+            padding: 12px 20px;
+            font-size: 1rem;
+            border: 2px solid var(--secondary-color);
+            border-radius: 30px;
+            outline: none;
+            width: 240px;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        button.unlock-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin-left: 8px;
+            font-size: 1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .error-msg {
+            color: #d9534f;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            height: 20px;
+            opacity: 0;
+        }
+
+        /* --- MAIN HUB --- */
+        #main-content {
+            display: none;
+            opacity: 0;
+            width: 100%;
+            max-width: 1000px;
+            padding: 40px 20px;
+            flex-direction: column;
+            align-items: center;
+            transition: opacity 1s ease;
+        }
+
+        header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            text-align: center;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: #fff;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        /* --- LETTERS GRID --- */
+        .letters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Slightly wider for backgrounds */
+            gap: 25px;
+            width: 100%;
+        }
+
+        /* REFRESHED: envelope-card with picture background */
+        .envelope-card {
+            background: var(--paper-color);
+            border-radius: 16px;
+            padding: 40px 20px;
+            min-height: 100px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid var(--secondary-color);
+            
+            /* Background Image Properties */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            
+            /* Required for overlay alignment */
+            position: relative; 
+            overflow: hidden; 
+        }
+
+        /* NEW: Dark overlay so the text/icon is visible over the card background */
+        .envelope-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(255, 255, 255, 0.85); /* Adjust opacity for visibility */
+            z-index: 1; /* Places the light color layer over the image */
+        }
+
+        /* Ensure card contents stay on top of the overlay */
+        .envelope-card > * {
+            position: relative;
+            z-index: 2; /* Pushes content like text and icon to the top layer */
+        }
+
+        .envelope-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(255, 117, 151, 0.3);
+        }
+
+        .envelope-icon { 
+            font-size: 2.4rem; 
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            display: block; /* Centers the icon */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .envelope-number { 
+            font-weight: 500; 
+            color: var(--text-main); /* Darker text on the card for contrast */
+            font-size: 1rem;
+        }
+
+        /* --- POPUP MODAL WITH BACKGROUND IMAGE --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(43, 27, 32, 0.7);
+            backdrop-filter: blur(6px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 100; opacity: 0; pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .modal-card {
+            width: 90%;
+            max-width: 450px;
+            height: 550px; /* Locked height so it looks like a clean portrait photo card */
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            position: relative;
+            transform: translateY(30px);
+            transition: transform 0.4s ease;
+            overflow: hidden; /* Clips background image to radius */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; /* Pushes text to the bottom */
+        }
+
+        /* The Picture of Her inside the letter */
+        .modal-bg-image {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+        }
+
+        /* Dark/Blur Gradient overlay over the picture so text is easily readable */
+        .modal-text-gradient {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 75%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 20%, rgba(0, 0, 0, 0.5) 60%, transparent);
+            z-index: 2;
+        }
+
+        .modal-overlay.active .modal-card { transform: translateY(0); }
+
+        .close-btn {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 2.2rem; cursor: pointer;
+            color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            z-index: 4; transition: transform 0.2s;
+        }
+        .close-btn:hover { transform: scale(1.1); }
+
+        .modal-content-wrapper {
+            position: relative;
+            z-index: 3; /* Places text above image layer */
+            padding: 30px;
+            color: white;
+        }
+
+        .modal-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+        }
+
+        .modal-body {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            line-height: 1.5;
+            font-style: italic;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 500px) {
+            #name-form-container { flex-direction: column; gap: 10px; align-items: center; }
+            button.unlock-btn { margin-left: 0; width: 240px; }
+            .letters-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; } /* 2 column mobile grid */
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="birthday-song" src="birthday.mp3"></audio>
+
+    <section id="landing-screen">
+        <h1>For Someone Special</h1>
+        <p style="margin-bottom: 20px;">Turn your volume up and click below!</p>
+        
+        <button class="music-btn" id="play-music-btn" onclick="startExperience()">🎵 Play Birthday Music</button>
+        
+        <div id="name-form-container">
+            <p style="margin-bottom: 10px; font-size: 0.95rem;">Now, enter your name to open your gift:</p>
+            <input type="text" id="name-input" placeholder="Your name..." autocomplete="off">
+            <button class="unlock-btn" onclick="checkName()">Open</button>
+            <div class="error-msg" id="error-message">Hmm, that's not your name! Try again.</div>
+        </div>
+    </section>
+
+    <main id="main-content">
+        <header>
+            <h2 id="welcome-title">Happy Birthday! ✨</h2>
+            <p>19 reasons, memories, and letters celebrating who you are.</p>
+        </header>
+
+        <div class="letters-grid" id="grid-container"></div>
+    </main>
+
+    <div class="modal-overlay" id="modal-overlay" onclick="closeLetter()">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeLetter()">&times;</span>
+            
+            <div class="modal-bg-image" id="modal-bg-img"></div>
+            <div class="modal-text-gradient"></div>
+            
+            <div class="modal-content-wrapper">
+                <div class="modal-header" id="modal-title">Reason #1</div>
+                <div class="modal-body" id="modal-text">Text will load here...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const ALLOWED_NAME = "uyanda"; // Set her name here (lowercase)
+
+        // New: A small pool of different One Piece images for the envelope backgrounds.
+        // It will cycle through these to make the grid interesting. 
+        // Replace with direct links to cool (ideally pink or character) One Piece scenes.
+        const opCardImages = [
+            '../OP/onepiece1.jpg', // Card background URL 1
+            '../OP/onepiece2.jpg',
+            '../OP/onepiece3.jpg',
+            '../OP/onepiece4.jpg',
+            '../OP/onepiece5.jpg',
+            '../OP/onepiece6.jpg',
+            '../OP/onepiece7.jpg',
+            '../OP/onepiece8.jpg',
+            '../OP/onepiece9.jpg',
+            '../OP/onepiece10.jpg',
+            '../OP/onepiece11.jpg',
+            '../OP/onepiece12.jpg',
+            '../OP/onepiece13.jpg',
+            '../OP/onepiece14.jpg',
+            '../OP/onepiece15.jpg',
+            '../OP/onepiece16.jpg',
+            '../OP/onepiece17.jpg',
+            '../OP/onepiece18.jpg',
+            '../OP/onepiece19.jpg',
+        ];
+
+        // 19 Reasons AND 19 links to her pictures for the popups!
+        // Replace the placeholder image URLs with actual direct links to her photos.
+        const lettersArray = [
+            { text: "You made me a big brother.", img: "../uya/img1.jpg" },
+            { text: "You always know exactly what to say to make a bad day instantly better.", img: "../uya/img1.jpg" },
+            { text: "Low-key love-hate your ragebaiting though.", img: "../uya/img3.jpg" },
+            { text: "You have this rare capacity to make everyone feel included and safe around you.", img: "../uya/img4.jpg" },
+            { text: "Remember that time we got completely lost and ended up laughing for hours? Best memory.", img: "../uya/img5.jpg" },
+            { text: "Your kindness isn't just something you practice—it's truly who you are, glad I adopted you as my little sister.", img: "../uya/img6.jpg" },
+            { text: "You challenge me to be a better, more thoughtful human being every day.", img: "../uya/img7.jpg" },
+            { text: "The sheer amount of determination you show when chasing your goals is inspiring.", img: "../uya/img8.jpg" },
+            { text: "Your taste in music/movies is brilliant (even when we radically disagree).", img: "../uya/img9.jpg" },
+            { text: "You are fiercely loyal to the people you care about, and it's a beautiful trait.", img: "../uya/img10.jpg" },
+            { text: "I love that I can completely be my weirdest self around you without judgment.", img: "../uya/img11.jpg" },
+            { text: "You notice the small things about people that everyone else completely misses.", img: "../uya/img12.jpg" },
+            { text: "Your energy can completely light up any room you walk into.", img: "../uya/img13.jpg" },
+            { text: "You've stayed by my side through the highs and the deep lows, and I value that immensely.", img: "../uya/img14.jpg" },
+            { text: "The world is genuinely a significantly brighter place because you are in it.", img: "../uya/img15.jpg" },
+            { text: "You're not afraid to stand up for what is right, even if you stand alone.", img: "../uya/img16.jpg" },
+            { text: "Biggest lover girl I've met btw, keep loving like that.", img: "../uya/img17.jpg" },
+            { text: "You have the biggest, most empathetic heart of anyone I have ever met.", img: "../uya/img18.jpg" },
+            { text: "Simply put: I love you for exactly who you are. Happy 19th Birthday!", img: "../uya/img19.jpg" }
+        ];
+
+        // --- CODE LOGIC ---
+
+        // Step 1: Plays music & triggers the hidden login container
+        function startExperience() {
+            const audio = document.getElementById('birthday-song');
+            audio.play().catch(error => console.log("Audio playback blocked until user clicked."));
+            
+            // Hide music button, bring up name form smoothly
+            const musicBtn = document.getElementById('play-music-btn');
+            const formContainer = document.getElementById('name-form-container');
+            
+            musicBtn.style.display = 'none';
+            formContainer.style.display = 'block';
+            setTimeout(() => { formContainer.style.opacity = '1'; }, 50);
+        }
+
+        // Step 2: Name verification
+        function checkName() {
+            const input = document.getElementById('name-input').value.trim().toLowerCase();
+            const errorElement = document.getElementById('error-message');
+            
+            if (input === ALLOWED_NAME) {
+                errorElement.style.opacity = 0;
+                transitionToMainHub();
+            } else {
+                errorElement.style.opacity = 1;
+            }
+        }
+
+        // Allow unlocking via "Enter" key
+        document.getElementById('name-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkName();
+        });
+
+        // Step 3: Switch Screens
+        function transitionToMainHub() {
+            const landing = document.getElementById('landing-screen');
+            const main = document.getElementById('main-content');
+            
+            landing.style.opacity = '0';
+            landing.style.transform = 'scale(0.95)';
+            
+            setTimeout(() => {
+                landing.style.display = 'none';
+                main.style.display = 'flex';
+                generateGrid();
+                setTimeout(() => { main.style.opacity = '1'; }, 50);
+            }, 800);
+        }
+
+        // Step 4: Build Envelopes WITH BACKGROUND PICTURES
+        function generateGrid() {
+            const grid = document.getElementById('grid-container');
+            grid.innerHTML = '';
+
+            lettersArray.forEach((item, index) => {
+                const cardNumber = index + 1;
+                const card = document.createElement('div');
+                card.className = 'envelope-card';
+                card.onclick = () => openLetter(cardNumber, item.text, item.img);
+                
+                // --- NEW BACKGROUND LOGIC ---
+                // Calculate which image from opCardImages pool to use (cyclical)
+                const imgPoolIndex = index % opCardImages.length; 
+                const selectedBgUrl = opCardImages[imgPoolIndex];
+                
+                // Apply the background image to the envelope card
+                card.style.backgroundImage = `url('${selectedBgUrl}')`;
+                
+                // Inject overlay layer AND content on top
+                //card.innerHTML = `
+                //    <div class="envelope-overlay"></div>
+                //    <div class="envelope-icon"></div>
+                //    <div class="envelope-number">Reason #${cardNumber}</div>
+                //`;
+                grid.appendChild(card);
+            });
+        }
+
+        // Step 5: Open Modals (Applies Custom Pic of Her and Text)
+        function openLetter(number, text, imageUrl) {
+            document.getElementById('modal-title').innerText = `Reason #${number}`;
+            document.getElementById('modal-text').innerText = text;
+            document.getElementById('modal-bg-img').style.backgroundImage = `url('${imageUrl}')`;
+            document.getElementById('modal-overlay').classList.add('active');
+        }
+
+        function closeLetter() {
+            document.getElementById('modal-overlay').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
